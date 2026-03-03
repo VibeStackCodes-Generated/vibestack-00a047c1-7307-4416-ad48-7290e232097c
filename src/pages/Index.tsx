@@ -1,83 +1,107 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { useMemo, useState } from 'react'
 
 const galleryItems = [
   {
     title: 'Saltwind Dunes',
     location: 'Atacama Desert, Chile',
     year: '2025',
+    category: 'Travel',
     src: 'https://img.vibestack.site/s/desert dunes golden light/600/800',
   },
   {
     title: 'Harbor Stories',
     location: 'Porto, Portugal',
     year: '2024',
+    category: 'Travel',
     src: 'https://img.vibestack.site/s/port city dusk boats/600/520',
   },
   {
     title: 'Rainroom',
     location: 'Kyoto, Japan',
     year: '2024',
+    category: 'Architecture',
     src: 'https://img.vibestack.site/s/kyoto alley rain night/600/760',
   },
   {
     title: 'Matte Horizon',
     location: 'Namib Coast, Namibia',
     year: '2023',
+    category: 'Travel',
     src: 'https://img.vibestack.site/s/coastal fog shoreline minimal/600/560',
   },
   {
     title: 'Quiet Riot',
     location: 'Brooklyn, NY',
     year: '2025',
+    category: 'Portrait',
     src: 'https://img.vibestack.site/s/street portrait cinematic light/600/740',
   },
   {
     title: 'Cathedral Light',
     location: 'Seville, Spain',
     year: '2023',
+    category: 'Architecture',
     src: 'https://img.vibestack.site/s/old cathedral interior sunlight/600/820',
   },
   {
     title: 'Blue Hour Sprint',
     location: 'Reykjavík, Iceland',
     year: '2024',
+    category: 'Editorial',
     src: 'https://img.vibestack.site/s/iceland street blue hour/600/600',
   },
   {
     title: 'Sandstone Echoes',
     location: 'Moab, Utah',
     year: '2025',
+    category: 'Travel',
     src: 'https://img.vibestack.site/s/sandstone canyon warm tones/600/700',
   },
   {
     title: 'Silk Route',
     location: 'Marrakesh, Morocco',
     year: '2023',
+    category: 'Travel',
     src: 'https://img.vibestack.site/s/marrakesh market colors/600/640',
   },
   {
     title: 'Studio 18',
     location: 'Paris, France',
     year: '2024',
+    category: 'Portrait',
     src: 'https://img.vibestack.site/s/editorial portrait studio lighting/600/780',
   },
   {
     title: 'Tidal Lines',
     location: 'Big Sur, California',
     year: '2025',
+    category: 'Editorial',
     src: 'https://img.vibestack.site/s/big sur coast aerial/600/520',
   },
   {
     title: 'Afterglow',
     location: 'Santorini, Greece',
     year: '2023',
+    category: 'Travel',
     src: 'https://img.vibestack.site/s/santorini sunset terrace/600/720',
   },
 ]
 
+const filters = ['All', 'Travel', 'Portrait', 'Editorial', 'Architecture']
+
 const Index = () => {
+  const [activeFilter, setActiveFilter] = useState('All')
+
+  const filteredGallery = useMemo(() => {
+    if (activeFilter === 'All') {
+      return galleryItems
+    }
+    return galleryItems.filter((item) => item.category === activeFilter)
+  }, [activeFilter])
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/90 backdrop-blur">
@@ -118,7 +142,7 @@ const Index = () => {
                 Travel · Editorial · Portrait
               </p>
               <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
-                Visual stories shaped by light, texture, and honest human moments.
+                Hello there !
               </h1>
               <p className="text-base text-muted-foreground md:text-lg">
                 Based in New York, Elara documents campaigns and quiet travel narratives across
@@ -169,19 +193,25 @@ const Index = () => {
             <h2 className="text-3xl font-semibold">Masonry gallery</h2>
           </div>
           <div className="flex flex-wrap gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            {['All', 'Travel', 'Portrait', 'Editorial', 'Architecture'].map((tag) => (
-              <span
+            {filters.map((tag) => (
+              <button
                 key={tag}
-                className="rounded-full border border-border/70 px-3 py-1 transition hover:bg-accent"
+                type="button"
+                onClick={() => setActiveFilter(tag)}
+                className={`rounded-full border px-3 py-1 transition ${
+                  activeFilter === tag
+                    ? 'border-primary/70 bg-primary text-primary-foreground'
+                    : 'border-border/70 text-muted-foreground hover:bg-accent'
+                }`}
               >
                 {tag}
-              </span>
+              </button>
             ))}
           </div>
         </div>
         <Separator className="my-6" />
         <div className="masonry columns-1 md:columns-2 lg:columns-3">
-          {galleryItems.map((item) => (
+          {filteredGallery.map((item) => (
             <div key={item.title} className="masonry-item mb-6">
               <div className="overflow-hidden rounded-2xl">
                 <img
